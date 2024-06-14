@@ -1,5 +1,7 @@
-const baseUrl = 'https://ifsp.ddns.net/webservices/lembretes';
-const formSignUp = $('#form-signup'); 
+const baseUrl = "https://ifsp.ddns.net/webservices/lembretes";
+let form;
+
+// VER ERRO DE BAD REQUEST DO POST 
 
 $(document).ready(() => {
     const loader = $('#loading');
@@ -15,21 +17,21 @@ $(document).ready(() => {
 
 $('form').on('submit', event => {
     const target = event.target;
+    
     const action = target.id;
     let url;
     let errorMessage;
 
-    console.log(action)
     if (action === 'form-login') {
         url = `${baseUrl}/usuario/login`;
         errorMessage = 'Invalid credentials.';
+        form = $('#form-login'); 
     } 
     else if (action === 'form-signup') {
         url = `${baseUrl}/usuario/signup`;
         errorMessage = 'This email is already registered.';
-        
+        form = $('#form-signup');
     }
-    
 
     event.preventDefault();
     event.stopPropagation();
@@ -44,10 +46,10 @@ $('form').on('submit', event => {
         $.ajax({
             url: url,
             type: 'POST',
-            data: $(this).serialize(),
+            data: form.serialize(),
             success: response => {
                 localStorage.setItem('token', response.token);
-                window.location.replace('../pages/home.html');
+                window.location.replace('../pages/index.html');
             },
             error: () => {
                 Swal.fire({
@@ -64,7 +66,6 @@ $('form').on('submit', event => {
 
 
 $('.form').find('input, textarea').on('keyup blur focus', function (e) {
-
     var $this = $(this),
         label = $this.prev('label');
 
@@ -81,7 +82,6 @@ $('.form').find('input, textarea').on('keyup blur focus', function (e) {
         label.removeClass('highlight');
         }
     } else if (e.type === 'focus') {
-
         if ($this.val() === '') {
         label.removeClass('highlight');
         }
@@ -89,11 +89,9 @@ $('.form').find('input, textarea').on('keyup blur focus', function (e) {
         label.addClass('highlight');
         }
     }
-
 });
   
 $('.tab a').on('click', function (e) {
-
     e.preventDefault();
 
     $(this).parent().addClass('active');
@@ -104,5 +102,4 @@ $('.tab a').on('click', function (e) {
     $('.tab-content > div').not(target).hide();
 
     $(target).fadeIn(600);
-
 });

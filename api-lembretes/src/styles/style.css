@@ -157,3 +157,12 @@ textarea {
   margin-top: -20px;
   text-align: right;
 }
+
+#new-note{
+  background: #6f40ee;
+}
+
+#new-note:hover,
+#new-note:focus {
+  background: #5f31dd;
+}
