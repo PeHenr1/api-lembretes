@@ -166,3 +166,13 @@ textarea {
 #new-note:focus {
   background: #5f31dd;
 }
+
+#note-text {
+  height: 250px;
+}
+
+header{
+  width: 100%;
+  padding: 20px 0px 20px 0px;
+}
+
