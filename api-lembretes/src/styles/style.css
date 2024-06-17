@@ -1,5 +1,4 @@
 body {
-  background: #c1bdba;
   font-family: 'Titillium Web', sans-serif;
 }
 
@@ -176,3 +175,10 @@ header{
   padding: 20px 0px 20px 0px;
 }
 
+.dark {
+  background-color: #110123; 
+}
+
+.light {
+  background-color: #d5d0ff; 
+}

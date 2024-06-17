@@ -29,21 +29,19 @@
     </div>
     <main class="d-none">
         <header class="mt-5 text-center">
-            <button id="logout" class="btn btn-outline-danger"><i class="bi bi-box-arrow-right"></i></button>
-            <button id="dark-theme-btn" class="btn btn-outline-dark"><i class="bi bi-moon-fill"></i></button>
-            <button id="light-theme-btn" class="btn btn-outline-light"><i class="bi bi-brightness-high"></i></button>
-            <h1 class="fw-bold text-uppercase">ListLoom</h1>
+            <button id="toggle-theme"><i></i></button>
+            <button id="logout" class="btn btn-danger"><i class="bi bi-box-arrow-right"></i></button>
+            <h1 class="fw-bold text-uppercase mt-5">ListLoom</h1>
             <div class="d-flex justify-content-center align-items-center">
-                <p class="fst-italic">Sessions expires in </p> 
+                <p class="fst-italic">Sessions expires in </p>
                 <p class="contador fst-italic mx-1" id="contador">03:00</p>
             </div>
-            
-            
+
+
         </header>
         <div>
-            <div class="container mt-5 col-12 col-md-2">
-                <textarea class="form-control  mt-3 d-flex" rows="8" id="initialTextarea"
-                    placeholder="Create a new note"></textarea>
+            <div class="container mt-5 col-12 col-md-6">
+                <textarea class="form-control" rows="2" id="initialTextarea" placeholder="Create a new note"></textarea>
             </div>
 
             <div class="modal fade" id="textareaModal" tabindex="-1" role="dialog" aria-labelledby="textareaModalLabel"
@@ -84,7 +82,8 @@
                 </table>
             </div>
         </div>
-        <div class="modal fade" id="editNote" tabindex="-1" role="dialog" aria-labelledby="textareaModalLabel" aria-hidden="true">
+        <div class="modal fade" id="editNote" tabindex="-1" role="dialog" aria-labelledby="textareaModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -100,7 +99,7 @@
                         <button type="button" class="btn btn-outline-danger delete-note">
                             Delete <i class="fa-regular fa-circle-xmark"></i>
                         </button>
-                        <button  type="button" class="btn btn-outline-warning edit-note">
+                        <button type="button" class="btn btn-outline-warning edit-note">
                             Edit <i class="fa-regular fa-floppy-disk ms-1 text-center"></i>
                         </button>
                     </div>

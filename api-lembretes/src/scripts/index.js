@@ -6,8 +6,6 @@ $(document).ready(() => {
 
     checkToken();
     loadNotes();
-    counter(180);
-    theme();
 
     setTimeout(() => {
         loader.removeClass('d-flex')
@@ -18,6 +16,7 @@ $(document).ready(() => {
 });
 
 function checkToken() {
+    //counter(182);
     $.ajax({
         url: `${baseUrl}/usuario/check`,
         type: 'GET',
@@ -30,6 +29,8 @@ function checkToken() {
                 title: 'Uh-Oh...',
                 text: 'Session expired! Redirecting to acess page.'
             });
+            localStorage.removeItem('contadorStartTime');
+            localStorage.removeItem('contadorTempo');
             setTimeout(() => {
                 window.location.replace('../pages/access.html');
             }, 2050)
@@ -47,7 +48,6 @@ function loadNotes() {
         success: response => {
             const tbody = $('tbody');
             let notes = '';
-            //console.log(response);
             if (response.length > 0) {
                 response.forEach(note => {
                     notes += `
@@ -59,7 +59,7 @@ function loadNotes() {
             } else {
                 notes += `
                 <tr>
-                    <td colspan="2" class="text-center table-secondary">No notes found.</td>
+                    <td colspan="2" class="text-center table-secondary no-notes">No notes found.</td>
                 </tr>
                 `
             }
@@ -105,6 +105,7 @@ $('#create-note').on('click', event => {
                     </tr>
                 `);
                 $('#textareaModal').modal('hide');
+                $('.no-notes').hide();
 
                 Swal.fire({
                     icon: 'success',
@@ -145,6 +146,7 @@ $('#editNote').on('click', '.delete-note', function (event) {
             });
             $(`td[data-note-id="${noteId}"]`).closest('tr').remove();
             $('#editNote').modal('hide');
+            loadNotes()
         },
         error: () => {
             const description = $('#editNote').find('#note-text').val();
@@ -234,6 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+/*
 function counter(durationInSeconds) {
     let startTime = localStorage.getItem('contadorStartTime');
 
@@ -256,7 +259,7 @@ function counter(durationInSeconds) {
         let minutes = Math.floor(durationInSeconds / 60);
         let seconds = durationInSeconds % 60;
 
-        $('#contador').text(('Sessions expires in '+ '0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2));
+        $('#contador').text(('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2));
 
         if (durationInSeconds <= 0) {
             clearInterval(interval);
@@ -271,32 +274,79 @@ function counter(durationInSeconds) {
     updateCountdown();
     let interval = setInterval(updateCountdown, 1000);
 }
+*/
 
-$('#dark-theme-btn').click(function() {
-    let htmlElement = document.querySelector('html');
-    htmlElement.setAttribute('data-bs-theme', 'dark');
-    localStorage.setItem('theme', 'dark');
-});
-
-$('#light-theme-btn').click(function() {
-    let htmlElement = document.querySelector('html');
-    htmlElement.setAttribute('data-bs-theme', 'light');
-    localStorage.setItem('theme', 'light');
-});
-
-$('#logout').click(function() {
+function logOut() {
     localStorage.removeItem('token');
     localStorage.removeItem('contadorStartTime');
     localStorage.removeItem('contadorTempo');
     window.location.href = '../pages/access.html';
+}
+
+$('#logout').click(function () {
+    logOut();
 });
 
-function theme(){
-    let savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        let htmlElement = document.querySelector('html');
-        htmlElement.setAttribute('data-bs-theme', savedTheme);
+
+function toggleTheme() {
+    const htmlElement = document.querySelector('html');
+    const body = document.body;
+    const theme = localStorage.getItem("theme");
+    const button = $('#toggle-theme');
+    const bIcon = $("#toggle-theme i");
+
+    if (theme === "dark") {
+        htmlElement.setAttribute('data-bs-theme', 'light');
+        body.classList.remove("dark");
+        body.classList.add("light");
+        button.removeClass('btn btn-outline-light')
+        button.addClass('btn btn-outline-dark')
+        bIcon.removeClass('bi bi-brightness-high')
+        bIcon.addClass('bi bi-moon-fill')
+        localStorage.setItem("theme", "light");
+        $("h1").css("color", "black");
+        $("h2").css("color", "black");
+    }
+    else {
+        htmlElement.setAttribute('data-bs-theme', 'dark');
+        body.classList.remove("light");
+        body.classList.add("dark");
+        button.removeClass('btn btn-outline-dark')
+        button.addClass('btn btn-outline-light')
+        bIcon.removeClass('bi bi-moon-fill')
+        bIcon.addClass('bi bi-brightness-high')
+        localStorage.setItem("theme", "dark");
+        $("h1").css("color", "white");
+        $("h2").css("color", "white");
     }
 }
+
+const initialTheme = localStorage.getItem("theme");
+if (initialTheme) {
+    document.body.classList.add(initialTheme);
+    const button = $('#toggle-theme');
+    const bIcon = $("#toggle-theme i");
+    if (initialTheme === "dark") {
+        button.removeClass('btn btn-outline-dark')
+        button.addClass('btn btn-outline-light')
+        bIcon.removeClass('bi bi-moon-fill')
+        bIcon.addClass('bi bi-brightness-high')
+        $("h1").css("color", "black");
+        $("h2").css("color", "black");
+    } else {
+        button.removeClass('btn btn-outline-light')
+        button.addClass('btn btn-outline-dark')
+        bIcon.removeClass('bi bi-brightness-high')
+        bIcon.addClass('bi bi-moon-fill')
+        $("h1").css("color", "white");
+        $("h2").css("color", "white");
+    }
+}
+
+const toggleButton = document.getElementById("toggle-theme");
+toggleButton.addEventListener("click", toggleTheme);
+
+
+
 
 setInterval(checkToken, 1000 * 60)

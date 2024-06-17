@@ -21,23 +21,19 @@
 </head>
 
 <body>
-<!--
-    <header class="d-flex justify-content-between align-items-center px-2 py-4">
-        <div class="header-btns px-4">
-            <button id="dark-theme-btn" class="btn btn-outline-dark"><i class="bi bi-moon-fill"></i></button>
-            <button id="light-theme-btn" class="btn btn-outline-light"><i class="bi bi-brightness-high"></i></button>
-        </div>
-        <h1 class="fw-bold text-uppercase mt-5 mb-0 mx-auto ml-auto">ListLoom</h1>
-        <button id="logout" class="btn btn-outline-danger"><i class="bi bi-box-arrow-right"></i></button>
-    </header>
--->
+
+
     <div id="loading" class="d-flex justify-content-center align-items-center vh-100">
         <div class="spinner-grow text-warning" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
     </div>
     <main class="d-none">
-
+        <header class="d-flex justify-content-between align-items-center px-2 py-4">
+            <div class="header-btns px-4">
+                <button id="toggle-theme"><i></i></button>
+            </div>
+        </header>
 
         <div class="form">
             <ul class="tab-group">
@@ -90,7 +86,7 @@
                             <input name="senha" type="password" id="signup-password" required autocomplete="off" />
                         </div>
 
-                        <button type="submit" class="button button-block" />Get Started</button>
+                        <button type="submit" class="button button-block">Get Started</button>
 
                     </form>
 
