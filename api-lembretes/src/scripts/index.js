@@ -6,6 +6,7 @@ $(document).ready(() => {
 
     checkToken();
     loadNotes();
+    initializeTheme();
 
     setTimeout(() => {
         loader.removeClass('d-flex')
@@ -13,10 +14,11 @@ $(document).ready(() => {
 
         main.removeClass('d-none');
     }, 2050);
+
+
 });
 
 function checkToken() {
-    //counter(182);
     $.ajax({
         url: `${baseUrl}/usuario/check`,
         type: 'GET',
@@ -29,8 +31,6 @@ function checkToken() {
                 title: 'Uh-Oh...',
                 text: 'Session expired! Redirecting to acess page.'
             });
-            localStorage.removeItem('contadorStartTime');
-            localStorage.removeItem('contadorTempo');
             setTimeout(() => {
                 window.location.replace('../pages/access.html');
             }, 2050)
@@ -52,7 +52,7 @@ function loadNotes() {
                 response.forEach(note => {
                     notes += `
                         <tr>
-                            <td class="table-secondary" data-note-id=${note.id}>${note.texto}</td>
+                            <td class="table-secondary" data-note-id=${note.id} data-note-date=${note.data}>${note.texto}</td>
                         </tr>
                     `
                 });
@@ -73,8 +73,8 @@ $('#create-note').on('click', event => {
     event.stopPropagation();
 
     const target = event.target;
-    const form = $('#note-form');
-    const description = $('#note-text').val();
+    const form = $('#note-form-create');
+    const description = $('#note-text-create').val();
 
     if (description.length > 255) {
         Swal.fire({
@@ -101,8 +101,8 @@ $('#create-note').on('click', event => {
                 const tbody = $('tbody');
                 tbody.append(`
                     <tr>
-                        <td class="table-secondary" data-note-id=${res.id}>${res.texto}</td>
-                    </tr>
+                        <td class="table-secondary" data-note-date=${res.data} data-note-id=${res.id}>${res.texto}</td>
+                    </tr>                           
                 `);
                 $('#textareaModal').modal('hide');
                 $('.no-notes').hide();
@@ -149,7 +149,7 @@ $('#editNote').on('click', '.delete-note', function (event) {
             loadNotes()
         },
         error: () => {
-            const description = $('#editNote').find('#note-text').val();
+            const description = $('#editNote').find('#note-text-edit').val();
             if (description.length > 255) {
                 Swal.fire({
                     icon: 'error',
@@ -170,9 +170,11 @@ $('#editNote').on('click', '.delete-note', function (event) {
 $('tbody').on('click', 'td[data-note-id]', function () {
     const noteText = $(this).text();
     const noteId = $(this).data('note-id');
+    const noteDate = $(this).data('note-date');
 
-    $('#editNote').find('#note-text').val(noteText);
+    $('#editNote').find('#note-text-edit').val(noteText);
     $('#editNote').data('note-id', noteId);
+    $('#editNote').find('#note-date').text(noteDate);
 
     $('#editNote').modal('show');
 });
@@ -181,7 +183,7 @@ $('#editNote').on('click', '.edit-note', function () {
 
     const noteId = $('#editNote').data('note-id');
     const originalText = $(`td[data-note-id="${noteId}"]`).text();
-    const updatedText = $('#editNote').find('#note-text').val();
+    const updatedText = $('#editNote').find('#note-text-edit').val();
 
     if (originalText === updatedText) {
         Swal.fire({
@@ -222,7 +224,7 @@ $('#editNote').on('click', '.edit-note', function () {
 
 document.addEventListener('DOMContentLoaded', () => {
     const initialTextarea = document.getElementById('initialTextarea');
-    const modalTextarea = document.getElementById('note-text');
+    const modalTextarea = document.getElementById('note-text-create');
     const textareaModal = $('#textareaModal');
 
     initialTextarea.addEventListener('click', () => {
@@ -235,46 +237,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
-
-/*
-function counter(durationInSeconds) {
-    let startTime = localStorage.getItem('contadorStartTime');
-
-    if (!startTime) {
-        startTime = new Date().getTime();
-        localStorage.setItem('contadorStartTime', startTime);
-    }
-    else {
-        let elapsedTime = Math.floor((new Date().getTime() - startTime) / 1000);
-        durationInSeconds -= elapsedTime;
-
-        if (durationInSeconds <= 0) {
-            durationInSeconds = 0;
-            localStorage.removeItem('contadorStartTime');
-            localStorage.removeItem('contadorTempo');
-        }
-    }
-
-    function updateCountdown() {
-        let minutes = Math.floor(durationInSeconds / 60);
-        let seconds = durationInSeconds % 60;
-
-        $('#contador').text(('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2));
-
-        if (durationInSeconds <= 0) {
-            clearInterval(interval);
-            localStorage.removeItem('contadorStartTime');
-            localStorage.removeItem('contadorTempo');
-        } else {
-            localStorage.setItem('contadorTempo', durationInSeconds);
-            durationInSeconds--;
-        }
-    }
-
-    updateCountdown();
-    let interval = setInterval(updateCountdown, 1000);
-}
-*/
 
 function logOut() {
     localStorage.removeItem('token');
@@ -321,25 +283,31 @@ function toggleTheme() {
     }
 }
 
-const initialTheme = localStorage.getItem("theme");
-if (initialTheme) {
-    document.body.classList.add(initialTheme);
+function initializeTheme() {
+    const htmlElement = document.querySelector('html');
+    const body = document.body;
     const button = $('#toggle-theme');
     const bIcon = $("#toggle-theme i");
+    const initialTheme = localStorage.getItem("theme");
+
     if (initialTheme === "dark") {
-        button.removeClass('btn btn-outline-dark')
-        button.addClass('btn btn-outline-light')
-        bIcon.removeClass('bi bi-moon-fill')
-        bIcon.addClass('bi bi-brightness-high')
-        $("h1").css("color", "black");
-        $("h2").css("color", "black");
+        htmlElement.setAttribute('data-bs-theme', 'dark');
+        body.classList.add("dark");
+        body.classList.remove("light");
+        button.removeClass('btn btn-outline-dark');
+        button.addClass('btn btn-outline-light');
+        bIcon.removeClass('bi bi-moon-fill');
+        bIcon.addClass('bi bi-brightness-high');
+        $("h1, h2").css("color", "white");
     } else {
-        button.removeClass('btn btn-outline-light')
-        button.addClass('btn btn-outline-dark')
-        bIcon.removeClass('bi bi-brightness-high')
-        bIcon.addClass('bi bi-moon-fill')
-        $("h1").css("color", "white");
-        $("h2").css("color", "white");
+        htmlElement.setAttribute('data-bs-theme', 'light');
+        body.classList.add("light");
+        body.classList.remove("dark");
+        button.removeClass('btn btn-outline-light');
+        button.addClass('btn btn-outline-dark');
+        bIcon.removeClass('bi bi-brightness-high');
+        bIcon.addClass('bi bi-moon-fill');
+        $("h1, h2").css("color", "black");
     }
 }
 

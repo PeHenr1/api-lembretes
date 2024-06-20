@@ -166,7 +166,7 @@ textarea {
   background: #5f31dd;
 }
 
-#note-text {
+#note-text-create, #note-text-edit {
   height: 250px;
 }
 

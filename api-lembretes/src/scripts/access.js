@@ -5,7 +5,7 @@ $(document).ready(() => {
     const loader = $('#loading');
     const main = $('main');
 
-    //theme();
+    initializeTheme();
 
     setTimeout(() => {
         loader.removeClass('d-flex')
@@ -60,7 +60,6 @@ $('form').on('submit', event => {
             }
         });
     }
-
 });
 
 $('.form').find('input, textarea').on('keyup blur focus', function (e) {
@@ -102,41 +101,31 @@ $('.tab a').on('click', function (e) {
     $(target).fadeIn(600);
 });
 
-/*
-function theme(){
-    let savedTheme = localStorage.getItem('theme');
-    let htmlElement = document.querySelector('html');
-    if (savedTheme) {
-        htmlElement.setAttribute('data-bs-theme', savedTheme);
-    }
-    else {
-        localStorage.setItem('theme', 'dark');
+function initializeTheme() {
+    const htmlElement = document.querySelector('html');
+    const body = document.body;
+    const button = $('#toggle-theme');
+    const bIcon = $("#toggle-theme i");
+    const initialTheme = localStorage.getItem("theme");
+
+    if (initialTheme === "dark") {
         htmlElement.setAttribute('data-bs-theme', 'dark');
-        $("body").css("background-color", "#110123");
+        body.classList.add("dark");
+        body.classList.remove("light");
+        button.removeClass('btn btn-outline-dark');
+        button.addClass('btn btn-outline-light');
+        bIcon.removeClass('bi bi-moon-fill');
+        bIcon.addClass('bi bi-brightness-high');
+    } else {
+        htmlElement.setAttribute('data-bs-theme', 'light');
+        body.classList.add("light");
+        body.classList.remove("dark");
+        button.removeClass('btn btn-outline-light');
+        button.addClass('btn btn-outline-dark');
+        bIcon.removeClass('bi bi-brightness-high');
+        bIcon.addClass('bi bi-moon-fill');
     }
 }
-
-
-$('#dark-theme-btn').click(function() {
-    let htmlElement = document.querySelector('html');
-    htmlElement.setAttribute('data-bs-theme', 'dark');
-    localStorage.setItem('theme', 'dark');
-
-    $("body").css("background-color", "#110123");
-});
-
-$('#light-theme-btn').click(function() {
-    let htmlElement = document.querySelector('html');
-    htmlElement.setAttribute('data-bs-theme', 'light');
-    localStorage.setItem('theme', 'light');
-
-    $("body").css("background-color","#d5d0ff");
-});
-*/
-
-// ARRUMAR O CONTADOR DE CIMA
-
-// ARRUMAR O DATA-BASE QUE NAO TA NO LOCALSTORAGE
 
 function toggleTheme() {
     const htmlElement = document.querySelector('html');
